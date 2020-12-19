@@ -13,17 +13,14 @@ from my.core.core_config import config as coreconf
 from .log import logger
 from .common import HPIModule
 
-# copy of my.core._modules
+# initially was a copy of my.core._modules
+#
 # this doesnt check skip_reason like that does
-# because all (e.g. github.all) often don't
+# because 'all' modules (e.g. github.all) often don't
 # have stats, but you'd definitely want to use
 # them as modules (since it has the top level merged events func)
 #
 # however, we still need to check if a module is disabled in user config (disabled_modules)
-#
-# basic 'yield from' function so it doesn't
-# directly depend on the underlying function, and
-# this can be modified if someone wants to
 def iter_modules() -> Iterator[HPIModule]:
     for mod in modules():
         active: Optional[bool] = coreconf._is_module_active(mod.name)

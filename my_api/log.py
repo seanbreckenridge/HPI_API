@@ -9,4 +9,4 @@ if "HPI_API_LOGS" in environ:
 
 # logzero handles this fine,
 # can be imported/configured multiple times
-logger = setup_logger(name="hpi_api", level=loglevel)
+logger = setup_logger(name="my_api", level=loglevel)
