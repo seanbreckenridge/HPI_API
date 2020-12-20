@@ -70,7 +70,7 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
             or isinstance(resp, dict)
             or libfunc.__qualname__ == "stats"
         ):
-            return resp
+            return {"value": resp}, 200
         riter: Iterator[Any] = iter(resp)
         limit: int = 50
         page: int = 1
@@ -92,6 +92,6 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
         # dont have any items which return pandas.DataFrames, but
         # that should be a simple check to convert it to an iterable-thing,
         # if iter() doesnt already do it automatically
-        return {"page": page, "limit": limit, "items": return_val}
+        return {"page": page, "limit": limit, "items": return_val}, 200
 
     return route

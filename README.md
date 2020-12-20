@@ -60,5 +60,6 @@ $ curl 'localhost:5050/my/zsh/history?limit=3'
   "summary": "commented on https://github.com/seanbreckenridge/mac-dotfiles/commit/d4ac3c30dd3df1b626f92eb61f651a27852ff86f#commitcomment-32324943"
 }
 $ curl 'localhost:5050/my/mpv/stats'
-{"history":{"count":5861}}
+[ ~ ] $ curl localhost:5050/my/zsh/stats
+{"value":{"history":{"count":266722}}}
 ```
