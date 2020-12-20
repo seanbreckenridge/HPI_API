@@ -29,7 +29,7 @@ For each function in an HPI module, this generates a HTTP route. For example, if
 
 Theres no limit to the `limit` param, if you wanted to grab all the data, you can always do something like `?limit=99999999999999999&page=1`
 
-Though I'm not a huge fan of pagination, the `limit` included anyways. Otherwise, if not behind `cachew`, some responses may take a *long* time to compute
+Though I'm not a huge fan of pagination, the `limit` included anyways. Otherwise, if not behind `cachew`, some responses may take a _long_ time to compute
 
 After installing, you can run this server with:
 

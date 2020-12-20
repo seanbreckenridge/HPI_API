@@ -12,7 +12,13 @@ def main() -> None:
 
 
 @main.command()
-@click.option("--print-routes", required=False, default=False, is_flag=True, help="List all the generated routes")
+@click.option(
+    "--print-routes",
+    required=False,
+    default=False,
+    is_flag=True,
+    help="List all the generated routes",
+)
 def server(print_routes: bool) -> None:
     """Run the HPI_API server"""
     app: Flask = generate_server()
@@ -24,7 +30,13 @@ def server(print_routes: bool) -> None:
 
 
 @main.command()
-@click.option("--functions", required=False, default=False, is_flag=True, help="List discovered functions")
+@click.option(
+    "--functions",
+    required=False,
+    default=False,
+    is_flag=True,
+    help="List discovered functions",
+)
 def list_modules(functions: bool) -> None:
     """Print the discovered HPI modules"""
     for mod in iter_modules():
