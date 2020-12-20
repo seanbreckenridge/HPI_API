@@ -11,4 +11,3 @@ Requires `python3.8+`
 To install with pip, run:
 
     pip install git+https://github.com/seanbreckenridge/HPI_API
-

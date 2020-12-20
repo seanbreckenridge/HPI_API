@@ -2,7 +2,7 @@ import io
 from setuptools import setup, find_packages
 from typing import List
 
-requirements: List[str] = ["logzero", "click"]
+requirements: List[str] = ["logzero", "click", "flask", "more_itertools"]
 
 # Use the README.md content for the long description:
 with io.open("README.md", encoding="utf-8") as fo:
@@ -21,9 +21,7 @@ setup(
     packages=find_packages(include=["my_api"]),
     install_requires=requirements,
     keywords="data server",
-    entry_points={
-        "console_scripts": ["hpi_api = my_api.__main__:main"]
-    },
+    entry_points={"console_scripts": ["hpi_api = my_api.__main__:main"]},
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",

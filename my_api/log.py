@@ -3,7 +3,7 @@ import logging
 from logzero import setup_logger  # type: ignore[import]
 
 # https://docs.python.org/3/library/logging.html#logging-levels
-loglevel: int = logging.WARNING  # (30)
+loglevel: int = logging.DEBUG  # (10)
 if "HPI_API_LOGS" in environ:
     loglevel = int(environ["HPI_API_LOGS"])
 
