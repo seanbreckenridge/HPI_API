@@ -41,7 +41,7 @@ def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
     def all_routes() -> Any:
         return {"routes": sorted(routes)}
 
-    blue.add_url_rule("/routes", "route", all_routes, methods=["GET"])
+    blue.add_url_rule("/routes", "routes", all_routes, methods=["GET"])
     return blue
 
 
