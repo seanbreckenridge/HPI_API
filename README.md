@@ -50,7 +50,7 @@ Here are some examples:
 ```bash
 $ curl 'localhost:5050/my/zsh/history?limit=3'
 {"items":[{"command":"z","dt":"Mon, 18 May 2020 08:23:22 GMT","duration":0},{"command":"en env_config.zsh","dt":"Mon, 18 May 2020 08:23:22 GMT","duration":0},{"command":"ls","dt":"Mon, 18 May 2020 08:23:22 GMT","duration":0}],"limit":3,"page":1}
- $ curl 'localhost:5050/my/github/all/events?limit=1' | jq -r '.items | .[0]'
+$ curl 'localhost:5050/my/github/all/events?limit=1' | jq -r '.items | .[0]'
 {
   "body": "Note: This is used for [gitopen](https://github.com/seanbreckenridge/dotfiles/commit/4c57fd97cbb2605e63d0cf5d2af37039fe6e6d35)",
   "dt": "Thu, 14 Feb 2019 21:05:40 GMT",
@@ -59,7 +59,6 @@ $ curl 'localhost:5050/my/zsh/history?limit=3'
   "link": "https://github.com/seanbreckenridge/mac-dotfiles/commit/d4ac3c30dd3df1b626f92eb61f651a27852ff86f#commitcomment-32324943",
   "summary": "commented on https://github.com/seanbreckenridge/mac-dotfiles/commit/d4ac3c30dd3df1b626f92eb61f651a27852ff86f#commitcomment-32324943"
 }
-$ curl 'localhost:5050/my/mpv/stats'
-[ ~ ] $ curl localhost:5050/my/zsh/stats
+$ curl localhost:5050/my/zsh/stats
 {"value":{"history":{"count":266722}}}
 ```
