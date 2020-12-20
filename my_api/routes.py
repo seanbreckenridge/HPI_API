@@ -8,7 +8,7 @@
 # run before any custom ones I define, so its not
 # possible to serialize custom types
 #
-# at that point, I'm getting none of the benifits
+# at that point, I'm getting none of the benefits
 # of the types that pydantic gives me, so its not
 # particularly worth to use it
 
