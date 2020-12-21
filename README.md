@@ -1,5 +1,3 @@
-# HPI_API
-
 An automatic JSON API for [HPI](https://github.com/karlicoss/HPI)
 
 This inspects functions in each `HPI` module file, generating routes for each of them.
@@ -10,13 +8,17 @@ If you have any suggestions/trouble with getting this to work, feel free to open
 
 ---
 
-## Installation
+### Installation
 
 Requires `python3.7+`
 
 To install with pip, run:
 
     pip install git+https://github.com/seanbreckenridge/HPI_API
+
+---
+
+### Usage
 
 For each function in an HPI module, this generates a HTTP route. For example, if you had the module `my.reddit`, which had a function `comments`, which returned an iterator/list of your `reddit` comments, requesting `/my/reddit/comments` will call that function.
 
