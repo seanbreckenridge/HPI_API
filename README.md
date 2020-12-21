@@ -28,6 +28,9 @@ For each function in an HPI module, this generates a HTTP route. For example, if
   - otherwise, this assumes its returning some iterable event-like response, and the following GET parameters let you paginate:
     - limit: int (defaults to 50)
     - page: int (defaults to 1)
+    - sort: "attribute" (some getattr/dict key on the object), e.g. "dt", or "date"
+    - order_by: [asc, desc] (to sort by ascending or descending order (default: asc))
+
 
 Theres no limit to the `limit` param, if you wanted to grab all the data, you can always do something like `?limit=99999999999999999&page=1`
 
@@ -63,4 +66,6 @@ $ curl 'localhost:5050/my/github/all/events?limit=1' | jq -r '.items | .[0]'
 }
 $ curl localhost:5050/my/zsh/stats
 {"value":{"history":{"count":266722}}}
+$ curl 'localhost:5050/my/zsh/history?sort=command&order_by=desc&limit=2'
+{"items":[{"command":"~/code/plaintext-playlist/plainplay | basename","dt":"Thu, 28 May 2020 06:52:58 GMT","duration":3},{"command":"~/code/plaintext-playlist/plainplay | basename","dt":"Thu, 28 May 2020 06:52:39 GMT","duration":2}],"limit":2,"page":1}
 ```

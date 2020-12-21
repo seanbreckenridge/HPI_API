@@ -49,9 +49,8 @@ def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
 # user can pass GET parameters (limit, page):
 #   limit: int (limit number of items, default 50)
 #   page: int (default 1)
-#   TODO: add sorting:
-#       sort: "attribute" (some getattr/dict key on the object), e.g. "dt", or "date"
-#       order_by: [asc, desc] (to sort by ascending or descending order (default: asc))
+#   sort: "attribute" (some getattr/dict key on the object), e.g. "dt", or "date"
+#   order_by: [asc, desc] (to sort by ascending or descending order (default: asc))
 def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
     # need to return either:
     #   - JSON compatible dict
@@ -63,7 +62,12 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
         try:
             resp: Any = libfunc()
         except TypeError as e:
-            return f"TypeError: {str(e)}\n", 400
+            return {
+                "error": "TypeError calling HPI function, assuming not enough arguments passed",
+                "exception": str(e),
+            }, 400
+        except Exception as e:
+            return {"error": "Error calling HPI function", "exception": str(e)}, 400
         # if primitive, stats or dict, return directly
         if (
             any([isinstance(resp, _type) for _type in [int, float, str, bool]])
@@ -72,19 +76,44 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
         ):
             return {"value": resp}, 200
         riter: Iterator[Any] = iter(resp)
+        # default values
         limit: int = 50
         page: int = 1
+        # ascending = True, descending = False
+        order_by: bool = True
         if "limit" in request.args:
             limit = int(request.args["limit"])
         if "page" in request.args:
             page = int(request.args["page"])
             if page < 1:
                 return "Page must be greater than 1\n", 400
+        if "sort" in request.args or "order_by" in request.args:
+            if "sort" in request.args:
+                # peek at first item, to determine how to iterate over this
+                # if values are a dict, should index, else use getattr
+                val: Any = more_itertools.peekable(riter).peek()
+                key: str = request.args["sort"]
+                if isinstance(val, dict):
+                    # make sure dictionary has key
+                    if key not in val.keys():
+                        return {
+                            "error": f"Value returned from iterator is a dictionary, but couldn't find key '{key}'"
+                        }, 400
+                    riter = iter(sorted(riter, key=lambda v: v[key]))  # type: ignore[no-any-return]
+                else:
+                    # if isn't a dict, assume namedtuple-like, or can use getattr on the object
+                    if not hasattr(val, key):
+                        return {
+                            "error": f"Value returned from iterator doesn't have attribute '{key}'"
+                        }, 400
+                    riter = iter(sorted(riter, key=lambda v: getattr(v, key)))  # type: ignore[no-any-return]
+            if "order_by" in request.args and request.args["order_by"] == "desc":
+                riter = more_itertools.always_reversible(riter)
         # exhaust paginations
         for _ in range(page - 1):
             more_itertools.take(limit, riter)
-        return_val: List[Any] = more_itertools.take(limit, riter)
-        # flask seems to handle serializing any return_val I've tried so far
+        vals: List[Any] = more_itertools.take(limit, riter)
+        # flask seems to handle serializing any vals I've tried so far
         # routes that commonly fail:
         #   /input functions (PosixPath is not JSON serializable)
         #   any helper/util function which requires an argument
@@ -92,6 +121,6 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
         # dont have any items which return pandas.DataFrames, but
         # that should be a simple check to convert it to an iterable-thing,
         # if iter() doesnt already do it automatically
-        return {"page": page, "limit": limit, "items": return_val}, 200
+        return {"page": page, "limit": limit, "items": vals}, 200
 
     return route
