@@ -14,11 +14,11 @@
 
 import os
 from types import FunctionType
-from typing import List, Dict, Any, Callable, Iterator
+from typing import List, Dict, Any, Callable, Iterator, Tuple
 from functools import wraps
 
 import more_itertools
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 
 from .common import FuncTuple
 
@@ -45,18 +45,36 @@ def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
     return blue
 
 
-# TODO: let user pass basic kwargs as arguments? Can inspect type/signature.bind and coerce
+ResponseVal = Tuple[Any, int]
+
+
+def jsonsafe(obj: Any) -> ResponseVal:
+    """
+    Catch the TypeError which results from encoding non-encodable types
+    This uses flasks `jsonify`, which uses simplejson.dumps under the hood
+
+    Seems to have a couple extra types supported, like datetimes, and namedtuples
+
+    TODO: extend this to support additional types?
+    """
+    try:
+        return jsonify(obj), 200
+    except TypeError as encode_err:
+        return {
+            "error": "Could not encode response from HPI function as JSON",
+            "exception": str(encode_err),
+        }, 400
+
+
+# TODO: let user pass basic kwargs as arguments? Can inspect type/signature.bind and coerce. could be dangerous...
 # user can pass GET parameters (limit, page):
 #   limit: int (limit number of items, default 50)
 #   page: int (default 1)
 #   sort: "attribute" (some getattr/dict key on the object), e.g. "dt", or "date"
 #   order_by: [asc, desc] (to sort by ascending or descending order (default: asc))
-def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
-    # need to return either:
-    #   - JSON compatible dict
-    #   - serialized Response with JSON MimeType
+def generate_route_handler(libfunc: FunctionType) -> Callable[[], ResponseVal]:
     @wraps(libfunc)
-    def route() -> Any:
+    def route() -> ResponseVal:
         # wrap TypeError, common for non-event-like functions to fail
         # when argument count doesnt match
         try:
@@ -74,19 +92,18 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
             or isinstance(resp, dict)
             or libfunc.__qualname__ == "stats"
         ):
-            return {"value": resp}, 200
+            return jsonsafe({"value": resp})
         riter: Iterator[Any] = iter(resp)
         # default values
         limit: int = 50
         page: int = 1
         # ascending = True, descending = False
-        order_by: bool = True
         if "limit" in request.args:
             limit = int(request.args["limit"])
         if "page" in request.args:
             page = int(request.args["page"])
             if page < 1:
-                return "Page must be greater than 1\n", 400
+                return {"error": "Page must be greater than 1"}, 400
         if "sort" in request.args or "order_by" in request.args:
             if "sort" in request.args:
                 # peek at first item, to determine how to iterate over this
@@ -121,6 +138,6 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], Any]:
         # dont have any items which return pandas.DataFrames, but
         # that should be a simple check to convert it to an iterable-thing,
         # if iter() doesnt already do it automatically
-        return {"page": page, "limit": limit, "items": vals}, 200
+        return jsonsafe({"page": page, "limit": limit, "items": vals})
 
     return route
