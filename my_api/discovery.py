@@ -13,8 +13,8 @@ from my.core.util import modules
 try:
     from my.core.core_config import config as coreconf
     mod_active = coreconf._is_module_active
-except ImportError as e:
-    logger.warning("Could not import my.core.core_config for determining active modules, assuming all modules are active")
+except (AttributeError, ImportError) as e:
+    logger.warning("Could not import/use my.core.core_config.config._is_module_active for determining active modules, assuming all modules are active")
     logger.error(e)
     mod_active = lambda mod: True
 
