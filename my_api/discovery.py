@@ -6,11 +6,17 @@ import importlib
 import inspect
 from typing import Iterator, Optional
 
-from my.core.util import modules
-from my.core.core_config import config as coreconf
-
 from .log import logger
 from .common import HPIModule, FuncTuple
+
+from my.core.util import modules
+try:
+    from my.core.core_config import config as coreconf
+    mod_active = coreconf._is_module_active
+except ImportError as e:
+    logger.warning("Could not import my.core.core_config for determining active modules, assuming all modules are active")
+    logger.error(e)
+    mod_active = lambda mod: True
 
 # initially was a copy of my.core._modules
 #
@@ -22,7 +28,7 @@ from .common import HPIModule, FuncTuple
 # however, we still need to check if a module is disabled in user config (disabled_modules)
 def iter_modules() -> Iterator[HPIModule]:
     for mod in modules():
-        active: Optional[bool] = coreconf._is_module_active(mod.name)
+        active: Optional[bool] = mod_active(mod.name)
         if active is False:
             continue
         yield mod
