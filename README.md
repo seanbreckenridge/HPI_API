@@ -20,7 +20,7 @@ To install with pip, run:
 
 ### Usage
 
-For each function in an HPI module, this generates a HTTP route. For example, if you had the module `my.reddit`, which had a function `comments`, which returned an iterator/list of your `reddit` comments, requesting `/my/reddit/comments` will call that function.
+For each function in an HPI module, this generates a HTTP route. For example, if you had the module `my.reddit`, which had a function `comments`, which returned an iterator/list of your `reddit` comments, requesting `/my/reddit/comments` would call that function.
 
 - If the function fails to be called, it returns an HTTP code > 400.
 - If the function succeeds
