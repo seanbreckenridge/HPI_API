@@ -4,8 +4,7 @@ Handles discovering the HPIModule objects from my.core.util
 
 import importlib
 import inspect
-from types import FunctionType
-from typing import Any, Iterator, Tuple, Optional
+from typing import Iterator, Optional
 
 from my.core.util import modules
 from my.core.core_config import config as coreconf
@@ -48,23 +47,3 @@ def iter_functions(mod: HPIModule) -> Iterator[FuncTuple]:
         logger.warning(
             "If you wish to silence this error, add the name of this module to the list of disabled_modules in my.config.core in your HPI configuration"
         )
-
-
-# -- dont use out of the box; dangerous to just call every function in a module
-
-# returns True if a function from a HPI module
-# returns a stream of (at least 1) event(s)
-#
-# this isn't perfect as it does find
-# false-positives, but it should
-# filter out some functions
-def is_event_like(func: FunctionType, args: Optional[Tuple[Any, ...]] = None) -> bool:
-    rargs: Tuple[Any, ...] = () if args is None else args
-    try:
-        resp_iter: Any = iter(func(*rargs))
-        next(resp_iter)
-        # didnt error, continue
-        return True
-    except Exception as e:
-        logger.debug(f"Could not apply {func} with {args}: " + str(e))
-    return False
