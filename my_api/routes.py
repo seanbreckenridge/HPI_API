@@ -133,6 +133,7 @@ def generate_route_handler(libfunc: FunctionType) -> Callable[[], ResponseVal]:
         if not isinstance(limit_res, int):
             return limit_res
         limit: int = limit_res
+        # TODO: modularize into parse_int_or_error?
         if limit < 1:
             return {"error": "limit must be greater than or equal to 1"}, 400
 
