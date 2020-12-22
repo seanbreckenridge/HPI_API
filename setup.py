@@ -23,7 +23,7 @@ setup(
     keywords="data server",
     entry_points={"console_scripts": ["hpi_api = my_api.__main__:main"]},
     classifiers=[
-        "License :: OSI Approved :: Apache Software License",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
