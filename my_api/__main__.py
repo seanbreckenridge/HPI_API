@@ -8,6 +8,7 @@ from .server import generate_server
 
 @click.group()
 def main() -> None:
+    """HPI_API, an automatic JSON API for https://github.com/karlicoss/HPI"""
     pass
 
 
@@ -19,14 +20,15 @@ def main() -> None:
     is_flag=True,
     help="List all the generated routes",
 )
-def server(print_routes: bool) -> None:
+@click.option("--port", default=5050, type=int, help="Port to host application on")
+def server(print_routes: bool, port: int) -> None:
     """Run the HPI_API server"""
     app: Flask = generate_server()
     if print_routes:
         for rule in app.url_map.iter_rules():
             click.echo(str(rule))
     else:
-        app.run(host="0.0.0.0", port="5050")
+        app.run(host="0.0.0.0", port=port)
 
 
 @main.command()
