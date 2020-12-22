@@ -23,9 +23,10 @@ from flask import Blueprint, request, jsonify
 from .common import FuncTuple
 
 # generates a blueprint which
-# represents the entire HPI API
+# represents the entire HPI interface
+# module_name -> function information
 # example item in the fdict:
-#   'my.github.all': ['events', <function events ...>, ...]
+#   'my.github.all': [('events', <function events ...>), (), ...]
 def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
     blue: Blueprint = Blueprint("hpi_api", __name__)
     routes: List[str] = []
