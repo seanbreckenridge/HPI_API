@@ -75,6 +75,8 @@ $ curl 'localhost:5050/my/zsh/history?sort=command&order_by=desc&limit=2'
 
 To change the port this runs on, you can use the `--port` flag to change the port this runs on (default is `5050`) when running with `hpi_api server`.
 
+By default, this allows CORS requests, you can pass the `--no-cors` flag to disable that.
+
 If you want to customize the application further, you can import the generated Flask application to add routes, or run it with another WSGI compatible server, like [`waitress`](https://pypi.org/project/waitress/):
 
 ```python

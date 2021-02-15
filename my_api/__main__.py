@@ -21,9 +21,15 @@ def main() -> None:
     help="List all the generated routes",
 )
 @click.option("--port", default=5050, type=int, help="Port to host application on")
-def server(print_routes: bool, port: int) -> None:
+@click.option(
+    "--cors/--no-cors",
+    is_flag=True,
+    default=True,
+    help="Specify whether CORS should be allowed",
+)
+def server(print_routes: bool, port: int, cors: bool) -> None:
     """Run the HPI_API server"""
-    app: Flask = generate_server()
+    app: Flask = generate_server(cors=cors)
     if print_routes:
         for rule in app.url_map.iter_rules():
             click.echo(str(rule))
