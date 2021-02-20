@@ -46,7 +46,7 @@ To list the routes, you can run one of the following:
 ```bash
 $ curl 'localhost:5050/routes'
 $ hpi_api list-modules --functions
-$ hpi_api sever --print-routes
+$ hpi_api server --print-routes
 ```
 
 Here are some examples:
