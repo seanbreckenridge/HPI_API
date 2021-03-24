@@ -2,7 +2,7 @@ import io
 from setuptools import setup, find_packages
 from typing import List
 
-requirements: List[str] = ["logzero", "click", "flask", "more_itertools"]
+requirements: List[str] = ["logzero", "click", "flask", "more_itertools", "orjson"]
 
 # Use the README.md content for the long description:
 with io.open("README.md", encoding="utf-8") as fo:

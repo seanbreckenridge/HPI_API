@@ -4,6 +4,8 @@ This inspects functions in each `HPI` module file, generating routes for each of
 
 This provides access to the data fine, but I wouldn't recommend putting this up on the public internet as this allows anything that can make a GET request to call arbitrary functions in HPI; At least put it behind some authenticated proxy or host it on a private port
 
+This uses [`my.core.serialize`](https://github.com/karlicoss/HPI/blob/master/my/core/serialize.py) to convert the responses to JSON, which uses [`orjson`](https://github.com/ijl/orjson) under the hood, to serialize datetimes, namedtuples and dataclasses much faster than the stdlib.
+
 If you have any suggestions/trouble with getting this to work, feel free to open an Issue/PR!
 
 ---

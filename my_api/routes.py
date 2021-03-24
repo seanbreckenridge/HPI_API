@@ -18,7 +18,8 @@ from typing import List, Dict, Any, Callable, Iterator, Tuple, Union, Optional
 from functools import wraps
 
 import more_itertools
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, Response
+from my.core.serialize import dumps
 
 from .common import FuncTuple
 
@@ -46,7 +47,7 @@ def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
     return blue
 
 
-ResponseVal = Tuple[Any, int]
+ResponseVal = Union[Response, Tuple[Any, int]]
 
 
 # flask seems to handle serializing any vals I've tried so far
@@ -60,14 +61,11 @@ ResponseVal = Tuple[Any, int]
 def jsonsafe(obj: Any) -> ResponseVal:
     """
     Catch the TypeError which results from encoding non-encodable types
-    This uses flasks `jsonify`, which uses simplejson.dumps under the hood
-
-    Seems to have a couple extra types supported, like datetimes, and namedtuples
-
-    TODO: extend this to support additional types?
+    This uses the serialize function from my.core.serialize, which handles
+    serializing most types in HPI
     """
     try:
-        return jsonify(obj), 200
+        return Response(dumps(obj), status=200, headers={"Content-Type": "application/json"})
     except TypeError as encode_err:
         return {
             "error": "Could not encode response from HPI function as JSON",
