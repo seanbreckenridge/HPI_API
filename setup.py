@@ -1,11 +1,9 @@
-import io
+from pathlib import Path
 from setuptools import setup, find_packages
-from typing import List
 
-requirements: List[str] = ["logzero", "click", "flask", "more_itertools"]
+reqs = Path("requirements.txt").read_text().splitlines()
 
-# Use the README.md content for the long description:
-with io.open("README.md", encoding="utf-8") as fo:
+with open("README.md", encoding="utf-8") as fo:
     long_description = fo.read()
 
 setup(
@@ -19,7 +17,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(include=["my_api"]),
-    install_requires=requirements,
+    install_requires=reqs,
     keywords="data server",
     entry_points={"console_scripts": ["hpi_api = my_api.__main__:main"]},
     classifiers=[
@@ -28,5 +26,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
 )

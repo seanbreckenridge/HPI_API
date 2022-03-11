@@ -14,23 +14,28 @@ from my.core.util import modules
 try:
     from my.core.core_config import config as coreconf
 
-    mod_active = coreconf._is_module_active
+    mod_active = coreconf._is_module_active  # type: ignore[no-redef]
 except (AttributeError, ImportError) as e:
     logger.warning(
         "Could not import/use my.core.core_config.config._is_module_active for determining active modules, assuming all modules are active"
     )
     logger.error(e)
-    mod_active = lambda mod: True
 
-# initially was a copy of my.core._modules
-#
-# this doesnt check skip_reason like that does
-# because 'all' modules (e.g. github.all) often don't
-# have stats, but you'd definitely want to use
-# them as modules (since it has the top level merged events func)
-#
-# however, we still need to check if a module is disabled in user config (disabled_modules)
+    def mod_active(module: str) -> bool | None:
+        return True
+
+
 def iter_modules() -> Iterator[HPIModule]:
+    """
+    initially was a copy of my.core._modules
+
+    this doesnt check skip_reason like that does
+    because 'all' modules (e.g. github.all) often don't
+    have stats, but you'd definitely want to use
+    them as modules (since it has the top level merged events func)
+
+    however, we still need to check if a module is disabled in user config (disabled_modules)
+    """
     for mod in modules():
         active: Optional[bool] = mod_active(mod.name)
         if active is False:

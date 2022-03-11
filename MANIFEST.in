@@ -1,3 +1,0 @@
-include LICENSE
-exclude tags*
-include mypy.ini

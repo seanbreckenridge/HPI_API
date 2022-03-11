@@ -23,12 +23,15 @@ from my.core.serialize import dumps
 
 from .common import FuncTuple
 
-# generates a blueprint which
-# represents the entire HPI interface
-# module_name -> function information
-# example item in the fdict:
-#   'my.github.all': [('events', <function events ...>), (), ...]
+
 def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
+    """
+    generates a blueprint which
+    represents the entire HPI interface
+    module_name -> function information
+    example item in the fdict:
+      'my.github.all': [('events', <function events ...>), (), ...]
+    """
     blue: Blueprint = Blueprint("hpi_api", __name__)
     routes: List[str] = []
     for module_name, funcs in fdict.items():
@@ -39,6 +42,7 @@ def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
                 rule, rule, generate_route_handler(libfunc), methods=["GET"]
             )
             routes.append(rule)
+
     # add /route, to display all routes
     def all_routes() -> Any:
         return {"routes": sorted(routes)}
@@ -65,7 +69,9 @@ def jsonsafe(obj: Any) -> ResponseVal:
     serializing most types in HPI
     """
     try:
-        return Response(dumps(obj), status=200, headers={"Content-Type": "application/json"})
+        return Response(
+            dumps(obj), status=200, headers={"Content-Type": "application/json"}
+        )
     except TypeError as encode_err:
         return {
             "error": "Could not encode response from HPI function as JSON",
@@ -75,8 +81,9 @@ def jsonsafe(obj: Any) -> ResponseVal:
 
 IntResult = Union[ResponseVal, int]
 
-# helper to parse int GET params
+
 def parse_int_or_error(get_param: Optional[str], default: int) -> IntResult:
+    """helper to parse int GET params"""
     # if the request.args.get returned None, user didn't override default
     if get_param is None:
         return default
