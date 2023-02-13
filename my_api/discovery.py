@@ -51,7 +51,7 @@ def iter_modules() -> Iterator[HPIModule]:
 def iter_functions(mod: HPIModule) -> Iterator[FuncTuple]:
     try:
         modval = importlib.import_module(mod.name)
-        for (fname, func) in inspect.getmembers(modval, inspect.isfunction):
+        for fname, func in inspect.getmembers(modval, inspect.isfunction):
             # make sure function was defined in module
             if func.__module__ == mod.name:
                 # assume its not a helper function

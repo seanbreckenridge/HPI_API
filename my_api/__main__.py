@@ -50,7 +50,7 @@ def list_modules(functions: bool) -> None:
     for mod in iter_modules():
         click.echo(mod.name)
         if functions:
-            for (fname, func) in iter_functions(mod):
+            for fname, func in iter_functions(mod):
                 click.echo("- {}".format(fname))
 
 

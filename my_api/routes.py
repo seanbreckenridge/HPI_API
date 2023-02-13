@@ -35,7 +35,7 @@ def generate_blueprint(fdict: Dict[str, List[FuncTuple]]) -> Blueprint:
     blue: Blueprint = Blueprint("hpi_api", __name__)
     routes: List[str] = []
     for module_name, funcs in fdict.items():
-        for (fname, libfunc) in funcs:
+        for fname, libfunc in funcs:
             rule: str = os.path.join("/", module_name.replace(".", "/"), fname)
             assert "." not in rule
             blue.add_url_rule(
